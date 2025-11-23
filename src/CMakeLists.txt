@@ -15,6 +15,12 @@ add_ragel_library(lexer
   lexer.def
 )
 
+if (NOT MSVC)
+  target_compile_options(lexer PRIVATE
+    $<$<COMPILE_LANGUAGE:CXX>:-Wno-unused-const-variable>
+  )
+endif()
+
 add_executable(mcc
   main.cpp
   asmgen.cpp
