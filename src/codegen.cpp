@@ -483,7 +483,7 @@ template<bool output> llvm::Value* IRGenerator::getFormatString(llvm::Type* type
   auto hit = cache.find(type);
   if (hit != cache.end()) return hit->second;
   auto specifier = getFormatSpecifier<output>(type);
-  auto format = builder_.CreateGlobalStringPtr(specifier, "format");
+  auto format = builder_.CreateGlobalString(specifier, "format");
   cache.insert({type, format});
   return format;
 }
