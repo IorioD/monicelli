@@ -6,6 +6,7 @@
 
 #include "llvm/IR/Module.h"
 #include "llvm/Target/TargetMachine.h"
+#include "llvm/TargetParser/Triple.h"
 
 #include <string_view>
 #include <vector>
@@ -14,7 +15,7 @@ namespace monicelli {
 
 void registerTargets();
 
-llvm::TargetMachine* getTargetMachine(std::string_view triple, std::string_view cpu,
+llvm::TargetMachine* getTargetMachine(const llvm::Triple& triple, std::string_view cpu,
                                       std::string_view features, bool emit_pic);
 
 void writeAssembly(std::string_view to_filename, llvm::Module* module,

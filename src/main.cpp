@@ -8,6 +8,7 @@
 #include "parser.h"
 
 #include "llvm/TargetParser/Host.h"
+#include "llvm/TargetParser/Triple.h"
 
 #include <fstream>
 #include <string>
@@ -32,7 +33,7 @@ int main(int argc, char** argv) {
 
   registerTargets();
 
-  auto triple = llvm::sys::getDefaultTargetTriple();
+  llvm::Triple triple(llvm::sys::getDefaultTargetTriple());
   auto target_machine =
       getTargetMachine(triple, options.getCPU(), options.getCPUFeatures(), options.shouldEmitPIC());
 
@@ -59,7 +60,7 @@ int main(int argc, char** argv) {
 
     llvm::LLVMContext context;
     auto ir = generateIR(context, ast.get());
-    ir->setTargetTriple(triple);
+    ir->setTargetTriple(triple.str());
     ir->setDataLayout(target_machine->createDataLayout());
     runFunctionOptimizer(ir.get());
 
