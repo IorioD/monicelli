@@ -130,7 +130,7 @@ private:
   llvm::Type* getIRType(const VarType& type) {
     auto base_type = getIRBaseType(type.getBaseType());
     if (type.isPointer()) {
-      return base_type->getPointerTo();
+      return llvm::PointerType::getUnqual(base_type->getContext());
     }
     return base_type;
   }
