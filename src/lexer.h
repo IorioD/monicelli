@@ -12,6 +12,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <string_view>
 
 namespace monicelli {
 
@@ -56,7 +57,7 @@ public:
     return builtin_type_value_;
   }
 
-  const std::string& getStringValue() const {
+  std::string_view getStringValue() const {
     assert(getValueTypeForToken(type_) == ValueType::STRING);
     return string_value_;
   }

@@ -9,17 +9,18 @@
 
 #include <iostream>
 #include <string>
+#include <string_view>
 
 namespace monicelli {
 
-[[noreturn]] void UNREACHABLE(const std::string& message);
+[[noreturn]] void UNREACHABLE(std::string_view message);
 
 class ErrorReportingMixin {
 protected:
-  explicit ErrorReportingMixin(const std::string& source_filename)
+  explicit ErrorReportingMixin(std::string_view source_filename)
       : source_filename_(source_filename) {}
 
-  const std::string& getSourceFilename() const { return source_filename_; }
+  std::string_view getSourceFilename() const { return source_filename_; }
 
   void printErrorLocation(std::ostream& stream, const Location& from, const Location& to);
 

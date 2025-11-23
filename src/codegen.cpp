@@ -24,6 +24,7 @@
 #include "llvm/Transforms/Utils.h"
 
 #include <memory>
+#include <string_view>
 #include <vector>
 
 using namespace monicelli;
@@ -47,9 +48,9 @@ public:
   NestedScopes(NestedScopes&) = delete;
   NestedScopes& operator=(NestedScopes&) = delete;
 
-  llvm::AllocaInst* lookup(const std::string& name);
+  llvm::AllocaInst* lookup(std::string_view name);
 
-  bool define(const std::string& name, llvm::AllocaInst* def) {
+  bool define(std::string_view name, llvm::AllocaInst* def) {
     assert(!scopes_.empty() && "Trying to define outside any scope");
     auto result = scopes_.back().insert({name, def});
     return result.second;
@@ -74,7 +75,7 @@ class IRGenerator;
 class ResultTypeCalculator : public ConstAstVisitor<ResultTypeCalculator, llvm::Type*>,
                              public ErrorReportingMixin {
 public:
-  ResultTypeCalculator(IRGenerator* codegen, const std::string& source_filename)
+  ResultTypeCalculator(IRGenerator* codegen, std::string_view source_filename)
       : ErrorReportingMixin(source_filename), codegen_(codegen) {}
 
   llvm::Type* visitBinaryExpression(const BinaryExpression* e);
@@ -88,7 +89,7 @@ private:
 class IRGenerator final : public ConstAstVisitor<IRGenerator, llvm::Value*>,
                           public ErrorReportingMixin {
 public:
-  IRGenerator(llvm::LLVMContext& context, const std::string& source_filename)
+  IRGenerator(llvm::LLVMContext& context, std::string_view source_filename)
       : ErrorReportingMixin(source_filename), context_(context), builder_(context),
         exit_block_(nullptr), return_var_(nullptr), type_calculator_(this, source_filename) {}
 
@@ -116,7 +117,7 @@ public:
 
 private:
   llvm::Function* declareFunction(const Function* f);
-  std::string getFunctionName(const Function* f) {
+  std::string_view getFunctionName(const Function* f) {
     return f->isEntryPoint() ? "main" : f->getName();
   }
 
@@ -137,7 +138,7 @@ private:
   llvm::Type* getIRBaseType(VarType::BaseType type);
   llvm::Value* ensureType(llvm::Value* value, llvm::Type* type);
   const char* getSourceBaseType(llvm::Type* type);
-  std::string getSourceType(llvm::Type* type);
+  std::string_view getSourceType(llvm::Type* type);
 
   llvm::Value* evalBooleanCondition(const Expression* condition_expression);
   llvm::Value* evalTruthiness(llvm::Value* val);
@@ -162,7 +163,7 @@ private:
 
 } // namespace
 
-llvm::AllocaInst* NestedScopes::lookup(const std::string& name) {
+llvm::AllocaInst* NestedScopes::lookup(std::string_view name) {
   for (auto c = scopes_.crbegin(), end = scopes_.crend(); c != end; ++c) {
     auto result = c->find(name);
     if (result != c->end()) return result->second;
@@ -444,7 +445,7 @@ const char* IRGenerator::getSourceBaseType(llvm::Type* type) {
   UNREACHABLE("Unhandled base type.");
 }
 
-std::string IRGenerator::getSourceType(llvm::Type* type) {
+std::string_view IRGenerator::getSourceType(llvm::Type* type) {
   // TODO: Show the pointer type, if possible.
   return type->isPointerTy() ? "conte" : getSourceBaseType(type);
 }

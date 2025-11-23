@@ -7,6 +7,7 @@
 #include "iterators.h"
 
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace monicelli {
@@ -22,7 +23,7 @@ public:
   bool shouldTraceLexer() const { return trace_lexer_; }
   bool shouldOnlyCompile() const { return compile_only_; }
   bool shouldSkipCompilation() const { return skip_compile_; }
-  const std::string& getOutputFilename() const { return output_filename_; }
+  std::string_view getOutputFilename() const { return output_filename_; }
 
   ConstStringIter begin_input_filenames() const { return input_filenames_.cbegin(); }
   ConstStringIter end_input_filenames() const { return input_filenames_.cend(); }
@@ -32,8 +33,8 @@ public:
   int input_filenames_size() const { return input_filenames_.size(); }
   bool input_filenames_empty() const { return input_filenames_.empty(); }
 
-  const std::string& getCPU() const { return cpu_; }
-  const std::string& getCPUFeatures() const { return cpu_features_; }
+  std::string_view getCPU() const { return cpu_; }
+  std::string_view getCPUFeatures() const { return cpu_features_; }
   bool shouldEmitPIC() const { return emit_pic_; }
 
 private:

@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <string>
+#include <string_view>
 
 namespace monicelli {
 
@@ -21,7 +22,7 @@ static void print(std::ostream& stream, const First& first, Tail... tail) {
   print(stream, tail...);
 }
 
-std::string basename(std::string input_filename);
+std::string basename(std::string_view input_filename);
 
 } // namespace monicelli
 

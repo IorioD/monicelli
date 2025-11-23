@@ -5,13 +5,13 @@
 
 namespace monicelli {
 
-std::string basename(std::string input_filename) {
+std::string basename(std::string_view input_filename) {
   auto base_name_start = input_filename.find_last_of("\\/");
   if (base_name_start != std::string::npos) {
     input_filename = input_filename.substr(base_name_start + 1);
   }
   if (input_filename.empty()) return "";
-  return input_filename;
+  return std::string(input_filename);
 }
 
 } // namespace monicelli

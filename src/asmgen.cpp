@@ -15,6 +15,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <string_view>
 
 #ifdef MONICELLI_ENABLE_LINKER
 #include <sys/types.h>
@@ -30,8 +31,8 @@ void registerTargets() {
   llvm::InitializeNativeTargetAsmPrinter();
 }
 
-llvm::TargetMachine* getTargetMachine(const std::string& triple, const std::string& cpu,
-                                      const std::string& features, bool emit_pic) {
+llvm::TargetMachine* getTargetMachine(std::string_view triple, std::string_view cpu,
+                                      std::string_view features, bool emit_pic) {
   std::string error;
   auto target = llvm::TargetRegistry::lookupTarget(triple, error);
 
@@ -45,7 +46,7 @@ llvm::TargetMachine* getTargetMachine(const std::string& triple, const std::stri
   return target->createTargetMachine(triple, cpu, features, opt, reloc_model);
 }
 
-void writeAssembly(const std::string& to_filename, llvm::Module* module,
+void writeAssembly(std::string_view to_filename, llvm::Module* module,
                    llvm::TargetMachine* target_machine) {
   std::error_code error_code;
   llvm::raw_fd_ostream output{to_filename, error_code, llvm::sys::fs::OF_None};
@@ -72,7 +73,7 @@ void writeAssembly(const std::string& to_filename, llvm::Module* module,
 
 static const char* C_COMPILER = "c99";
 
-void linkAssembly(const std::string& output_name, const std::vector<std::string>& object_files,
+void linkAssembly(std::string_view output_name, const std::vector<std::string>& object_files,
                   bool keep_object_files) {
   // Linking a C object file with certain modern libc's is so complicated that
   // we just let a C compiler do it for us. This function assumes POSIX, and
@@ -86,11 +87,11 @@ void linkAssembly(const std::string& output_name, const std::vector<std::string>
   cc_args[i++] = C_COMPILER;
   if (!output_name.empty()) {
     cc_args[i++] = "-o";
-    cc_args[i++] = output_name.c_str();
+    cc_args[i++] = output_name.data();
   }
   for (const auto& object_file : object_files) {
     assert(object_file[0] != '-' && "The option parser allowed a filename starting with -");
-    cc_args[i++] = object_file.c_str();
+    cc_args[i++] = object_file.data();
   }
   cc_args[i] = nullptr;
 

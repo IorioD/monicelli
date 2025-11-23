@@ -7,21 +7,21 @@
 #include "llvm/IR/Module.h"
 #include "llvm/Target/TargetMachine.h"
 
-#include <string>
+#include <string_view>
 #include <vector>
 
 namespace monicelli {
 
 void registerTargets();
 
-llvm::TargetMachine* getTargetMachine(const std::string& triple, const std::string& cpu,
-                                      const std::string& features, bool emit_pic);
+llvm::TargetMachine* getTargetMachine(std::string_view triple, std::string_view cpu,
+                                      std::string_view features, bool emit_pic);
 
-void writeAssembly(const std::string& to_filename, llvm::Module* module,
+void writeAssembly(std::string_view to_filename, llvm::Module* module,
                    llvm::TargetMachine* target_machine);
 
 #ifdef MONICELLI_ENABLE_LINKER
-void linkAssembly(const std::string& output_name, const std::vector<std::string>& object_files,
+void linkAssembly(std::string_view output_name, const std::vector<std::string>& object_files,
                   bool keep_object_files = false);
 #endif
 

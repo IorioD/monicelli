@@ -11,13 +11,14 @@
 
 #include <iostream>
 #include <memory>
+#include <string_view>
 #include <vector>
 
 namespace monicelli {
 
 class Parser final : public ErrorReportingMixin {
 public:
-  Parser(std::istream& input, const std::string& source_filename)
+  Parser(std::istream& input, std::string_view source_filename)
       : ErrorReportingMixin(source_filename), lexer_{input} {}
 
   std::unique_ptr<Module> parse() {

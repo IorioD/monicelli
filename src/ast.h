@@ -11,13 +11,14 @@
 #include <cassert>
 #include <memory>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace monicelli {
 
 class Variable final : public LocationMixin {
 public:
-  const std::string& getName() const { return name_; }
+  std::string_view getName() const { return name_; }
 
 private:
   std::string name_;
@@ -201,7 +202,7 @@ public:
 
   FunctionCallExpression() : Expression(Expression::TYPE_FunctionCallExpression) {}
 
-  const std::string& getFunctionName() const { return function_name_; }
+  std::string_view getFunctionName() const { return function_name_; }
   FunctionArgsConstIter args_begin() const { return function_args_.cbegin(); }
   FunctionArgsConstIter args_end() const { return function_args_.cend(); }
   ConstRangeWrapper<FunctionArgsConstIter> args() const { return {args_begin(), args_end()}; }
@@ -390,7 +391,7 @@ public:
   typedef std::vector<FunctionParam>::const_iterator FunctionParamConstIter;
   typedef PointerVectorConstIter<Statement> BodyConstIter;
 
-  const std::string& getName() const { return name_; }
+  std::string_view getName() const { return name_; }
   const VarType& getReturnType() const { return return_type_; }
   bool isEntryPoint() const { return name_.empty(); }
 
@@ -433,7 +434,7 @@ public:
     return {begin_functions(), end_functions()};
   }
 
-  const std::string& getSourceFilename() const { return source_filename_; }
+  std::string_view getSourceFilename() const { return source_filename_; }
 
 private:
   std::vector<std::unique_ptr<Function>> functions_;

@@ -7,10 +7,11 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <string_view>
 
 namespace monicelli {
 
-[[noreturn]] void UNREACHABLE(const std::string& message) {
+[[noreturn]] void UNREACHABLE(std::string_view message) {
   std::cerr << message << '\n';
   abort();
 }
