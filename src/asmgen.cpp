@@ -35,7 +35,7 @@ void registerTargets() {
 llvm::TargetMachine* getTargetMachine(const llvm::Triple& triple, std::string_view cpu,
                                       std::string_view features, bool emit_pic) {
   std::string error;
-  auto target = llvm::TargetRegistry::lookupTarget(triple.str(), error);
+  auto target = llvm::TargetRegistry::lookupTarget(triple, error);
 
   if (!target) {
     std::cerr << "While determining target: " << error << '\n';
@@ -44,7 +44,7 @@ llvm::TargetMachine* getTargetMachine(const llvm::Triple& triple, std::string_vi
 
   llvm::TargetOptions opt;
   auto reloc_model = emit_pic ? llvm::Reloc::Model::PIC_ : llvm::Reloc::Model::Static;
-  return target->createTargetMachine(triple.str(), cpu, features, opt, reloc_model);
+  return target->createTargetMachine(triple, cpu, features, opt, reloc_model);
 }
 
 void writeAssembly(std::string_view to_filename, llvm::Module* module,

@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
 
     llvm::LLVMContext context;
     auto ir = generateIR(context, ast.get());
-    ir->setTargetTriple(triple.str());
+    ir->setTargetTriple(triple);
     ir->setDataLayout(target_machine->createDataLayout());
     runFunctionOptimizer(ir.get());
 
